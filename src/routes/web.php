@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/attendance/clock', function () {
+    return view('user.attendance_clock');
+})->name('user.attendance.clock');
+
+// 管理者の勤怠一覧画面
+Route::get('/attendance/list', function () {
+    return view('admin.attendance_list');
+})->name('admin.attendance.list');
