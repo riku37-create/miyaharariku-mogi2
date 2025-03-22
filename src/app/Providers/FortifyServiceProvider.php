@@ -37,5 +37,15 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::loginView(function () {
             return view('auth.login');
         });
+
+        $this->app->singleton('path.redirect', function () {
+            return function () {
+                $user = auth()->user();
+
+                return $user->role === 'admin'
+                    ? route('admin.attendance.list') // 管理者
+                    : route('user.attendance.clock'); // 一般ユーザー
+            };
+        });
     }
 }
