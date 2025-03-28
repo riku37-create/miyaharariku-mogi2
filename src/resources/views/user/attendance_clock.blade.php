@@ -5,5 +5,6 @@
 @endsection
 
 @section('content')
-<div>ユーザー勤怠画面</div>
+<h1>{{ \Carbon\Carbon::now()->format('H:i:s') }}</h1>
+<button>出勤</button>
 @endsection

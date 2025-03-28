@@ -27,6 +27,7 @@ class RegisterRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255|email:strict|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'role' => ['required', 'in:admin,user'], // 役職のバリデーション
         ];
     }
 
