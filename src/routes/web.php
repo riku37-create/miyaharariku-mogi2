@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\LogoutController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -12,6 +16,15 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::post('/login', [AuthenticatedSessionController::class, 'store'])
+    ->name('login');
+
+Route::post('/register', [RegisteredUserController::class, 'store'])
+    ->name('register');
+
+
+Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
 Route::get('/attendance/clock', function () {
     return view('user.attendance_clock');
