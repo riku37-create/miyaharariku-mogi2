@@ -52,6 +52,13 @@
             <label class="group-label" for="password_confirmation">確認パスワード</label>
             <input class="group-input" type="password" name="password_confirmation">
         </div>
+        <div>
+            <label for="role">役職</label>
+            <select name="role" id="role" required>
+                <option value="admin">管理者</option>
+                <option value="user" selected>一般ユーザー</option>
+            </select>
+        </div>
         <button class="form-content__button" type="submit">登録</button>
     </form>
     <h2 class="form-sub">アカウントをお持ちの方</h2>
