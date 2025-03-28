@@ -6,10 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Actions\Fortify\CreateNewUser;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\RegisterRequest;
 
 class RegisteredUserController extends Controller
 {
-    public function store(Request $request, CreateNewUser $creator)
+    public function store(RegisterRequest $request, CreateNewUser $creator)
     {
         // バリデーション & ユーザー作成
         $user = $creator->create($request->all());
