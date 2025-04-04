@@ -19,7 +19,7 @@ class CreateAttendancesTable extends Migration
             $table->date('date'); // 勤務日
             $table->time('clock_in')->nullable(); // 出勤時刻（nullable：最初はnullでOK）
             $table->time('clock_out')->nullable(); // 退勤時刻
-            $table->integer('break')->default(0); // 休憩時間（分単位などで保存する想定）
+            $table->integer('total_break')->nullable();
             $table->timestamps();
         });
     }
