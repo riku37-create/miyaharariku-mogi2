@@ -44,7 +44,7 @@ class FortifyServiceProvider extends ServiceProvider
 
                 return $user->role === 'admin'
                     ? route('admin.attendance.list') // 管理者
-                    : route('user.attendance.clock'); // 一般ユーザー
+                    : route('attendance.show'); // 一般ユーザー
             };
         });
     }

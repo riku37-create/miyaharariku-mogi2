@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\AttendanceController;
 
 
 /*
@@ -26,9 +27,13 @@ Route::post('/register', [RegisteredUserController::class, 'store'])
 
 Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
-Route::get('/attendance/clock', function () {
-    return view('user.attendance_clock');
-})->name('user.attendance.clock');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/attendance', [AttendanceController::class, 'show'])->name('attendance.show');
+    Route::post('/attendance/clock-in', [AttendanceController::class, 'clockIn'])->name('attendance.clockIn');
+    Route::post('/attendance/clock-out', [AttendanceController::class, 'clockOut'])->name('attendance.clockOut');
+    Route::post('/attendance/break-start', [AttendanceController::class, 'breakStart'])->name('attendance.breakStart');
+    Route::post('/attendance/break-end', [AttendanceController::class, 'breakEnd'])->name('attendance.breakEnd');
+});
 
 // 管理者の勤怠一覧画面
 Route::get('/attendance/list', function () {
