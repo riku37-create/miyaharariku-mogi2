@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\Attendance;
 use App\Models\BreakTime;
 use Illuminate\Support\Facades\Auth;
@@ -88,5 +89,14 @@ class AttendanceController extends Controller
         }
 
         return redirect()->route('attendance.show');
+    }
+
+
+    public function index()
+    {
+        $user = User::find(Auth::id());
+        $attendances = $user->attendances()->with('breaks')->orderByDesc('date')->get();
+
+        return view('user.index', compact('attendances'));
     }
 }

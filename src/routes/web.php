@@ -33,7 +33,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/attendance/clock-out', [AttendanceController::class, 'clockOut'])->name('attendance.clockOut');
     Route::post('/attendance/break-start', [AttendanceController::class, 'breakStart'])->name('attendance.breakStart');
     Route::post('/attendance/break-end', [AttendanceController::class, 'breakEnd'])->name('attendance.breakEnd');
+
+    Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendance.index');
 });
+
 
 // 管理者の勤怠一覧画面
 Route::get('/attendance/list', function () {
