@@ -20,7 +20,7 @@ class AuthenticatedSessionController extends Controller
 
             return $user->role === 'admin'
                 ? redirect()->route('admin.attendance.list')
-                : redirect()->route('user.attendance.clock');
+                : redirect()->route('attendance.show');
         }
 
         return back()->withErrors([
