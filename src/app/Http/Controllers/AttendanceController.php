@@ -54,8 +54,14 @@ class AttendanceController extends Controller
             ->where('date', Carbon::today()->toDateString())
             ->firstOrFail();
 
+        $clockIn = Carbon::parse($attendance->clock_in);
+        $clockOut = Carbon::now(); // 現在時刻を退勤時間とする
+
+        $diffInSeconds = $clockIn->diffInSeconds($clockOut);
+
         $attendance->update([
-            'clock_out' => Carbon::now()->toTimeString(),
+            'clock_out' => $clockOut->toTimeString(),
+            'total_clock' => $diffInSeconds,
         ]);
 
         return redirect()->route('attendance.show');
@@ -88,6 +94,19 @@ class AttendanceController extends Controller
             ]);
         }
 
+        // 休憩の合計時間（分）を算出
+        $totalBreakMinutes = $attendance->breaks->sum(function ($b) {
+            if (!$b->break_start || !$b->break_end) {
+                return 0;
+            }
+            return \Carbon\Carbon::parse($b->break_start)->diffInSeconds(\Carbon\Carbon::parse($b->break_end));
+        });
+
+        // attendancesテーブルに保存
+        $attendance->update([
+            'total_break' => $totalBreakMinutes,
+        ]);
+
         return redirect()->route('attendance.show');
     }
 
@@ -96,7 +115,11 @@ class AttendanceController extends Controller
     {
         $user = User::find(Auth::id());
         $attendances = $user->attendances()->with('breaks')->orderByDesc('date')->get();
-
         return view('user.index', compact('attendances'));
+    }
+
+    public function detail()
+    {
+        return view('user.detail');
     }
 }

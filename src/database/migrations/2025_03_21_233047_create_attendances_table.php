@@ -20,6 +20,7 @@ class CreateAttendancesTable extends Migration
             $table->time('clock_in')->nullable(); // 出勤時刻（nullable：最初はnullでOK）
             $table->time('clock_out')->nullable(); // 退勤時刻
             $table->integer('total_break')->nullable();
+            $table->integer('total_clock')->nullable();
             $table->timestamps();
         });
     }

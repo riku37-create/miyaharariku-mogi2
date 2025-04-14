@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Attendance extends Model
 {
@@ -15,6 +16,8 @@ class Attendance extends Model
         'clock_in',
         'clock_out',
         'break',
+        'total_break',
+        'total_clock',
     ];
 
     public function user()

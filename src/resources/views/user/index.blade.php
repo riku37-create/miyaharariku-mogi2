@@ -25,9 +25,13 @@
         <td>
             {{ $attendance->clock_out}}
         </td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>
+            {{ gmdate('H:i:s', $attendance->total_break)  }}
+        </td>
+        <td>
+            {{ gmdate('H:i:s', $attendance->total_clock)  }}
+        </td>
+        <td><a href="">詳細</a></td>
     </tr>
     @endforeach
 </table>
