@@ -9,7 +9,7 @@ class CorrectionRequest extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'reason', 'status'];
+    protected $fillable = ['attendance_id','user_id', 'reason', 'status'];
 
     public function details()
     {

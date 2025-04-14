@@ -29,4 +29,9 @@ class Attendance extends Model
     {
         return $this->hasMany(BreakTime::class);
     }
+
+    public function correctionRequests()
+    {
+        return $this->hasMany(CorrectionRequest::class);
+    }
 }

@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Attendance;
 use App\Models\BreakTime;
+use App\Models\CorrectionRequest;
+use App\Models\CorrectionDetail;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
@@ -118,8 +121,60 @@ class AttendanceController extends Controller
         return view('user.index', compact('attendances'));
     }
 
-    public function detail()
+    public function detail($id)
     {
-        return view('user.detail');
+        $attendance = Attendance::with(['user','breaks'])->findOrFail($id);
+
+        $hasPendingRequest = $attendance->correctionRequests()
+        ->where('status', 'pending')
+        ->exists();
+
+        return view('user.detail', compact('attendance', 'hasPendingRequest'));
+    }
+
+    public function requestCorrection(Request $request, $id)
+    {
+        $attendance = Attendance::with('breaks')->findOrFail($id);
+
+        // 1. 修正申請（ヘッダー）を作成
+        $correctionRequest = CorrectionRequest::create([
+            'user_id' => Auth::id(),
+            'attendance_id' => $id,
+            'status' => 'pending', // 承認待ち
+            'reason' => $request->input('reason'),
+        ]);
+
+        // 2. 出退勤の修正を登録（空でなければ）
+        if ($request->filled('clock_in') || $request->filled('clock_out')) {
+            CorrectionDetail::create([
+                'correction_request_id' => $correctionRequest->id,
+                'correctable_id' => $attendance->id,
+                'correctable_type' => Attendance::class,
+                'corrected_start' => $request->filled('clock_in') ? Carbon::parse($request->input('clock_in')) : null,
+                'corrected_end' => $request->filled('clock_out') ? Carbon::parse($request->input('clock_out')) : null,
+            ]);
+        }
+
+        // 3. 休憩の修正を登録（繰り返し処理）
+        foreach ($request->input('breaks', []) as $breakInput) {
+            if (!empty($breakInput['start']) || !empty($breakInput['end'])) {
+                $breakTime = BreakTime::find($breakInput['id']);
+                if ($breakTime) {
+                    CorrectionDetail::create([
+                        'correction_request_id' => $correctionRequest->id,
+                        'correctable_id' => $breakTime->id,
+                        'correctable_type' => BreakTime::class,
+                        'corrected_start' => !empty($breakInput['start']) ? Carbon::parse($breakInput['start']) : null,
+                        'corrected_end' => !empty($breakInput['end']) ? Carbon::parse($breakInput['end']) : null,
+                    ]);
+                }
+            }
+        }
+
+        $hasPendingRequest = $attendance->correctionRequests()
+        ->where('status', 'pending')
+        ->exists();
+
+        return view('user.detail', compact('attendance', 'hasPendingRequest'));
     }
 }

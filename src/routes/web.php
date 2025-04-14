@@ -36,8 +36,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::get('/attendance/{id}', [AttendanceController::class, 'detail'])->name('attendance.detail');
+    Route::post('/attendance/{id}/correction-request', [AttendanceController::class, 'requestCorrection'])->name('attendance.correction.request');
 });
-
 
 // 管理者の勤怠一覧画面
 Route::get('/attendance/list', function () {

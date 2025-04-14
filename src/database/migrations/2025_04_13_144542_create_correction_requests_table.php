@@ -15,6 +15,7 @@ class CreateCorrectionRequestsTable extends Migration
     {
         Schema::create('correction_requests', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('attendance_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->text('reason');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
