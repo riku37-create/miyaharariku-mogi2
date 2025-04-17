@@ -37,7 +37,7 @@
         </tr>
     </table>
     @if ($hasPendingRequest)
-    <p style="color: red;">承認待ちの修正申請があるため、再申請はできません。</p>
+    <p style="color: red;">承認待ち</p>
     @else
     <button type="submit">修正</button>
     @endif

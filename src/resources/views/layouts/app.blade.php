@@ -15,7 +15,7 @@
     <header class="header">
         <div class="header-inner">
             <div class="header-inner__title">
-                <a class="title-a" href="">
+                <a class="title-a" href="/attendance">
                     <img class="title-image" src="{{ asset('images/logo.svg') }}">
                 </a>
             </div>
@@ -23,7 +23,7 @@
                 <ul class="nav-list">
                     <li class="nav-item"><a class="nav-item__a" href="/attendances">勤怠一覧</a></li>
                     <li class="nav-item"><a class="nav-item__a" href="">スタッフ一覧</a></li>
-                    <li class="nav-item"><a class="nav-item__a" href="">申請一覧</a></li>
+                    <li class="nav-item"><a class="nav-item__a" href="/stamp_correction_request/list">申請一覧</a></li>
                     <li class="nav-item">
                         @if (Auth::check())
                         <form action="/logout" method="post">

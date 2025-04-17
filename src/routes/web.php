@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\CorrectionRequestController;
 
 
 /*
@@ -18,13 +19,8 @@ use App\Http\Controllers\AttendanceController;
 |
 */
 
-Route::post('/login', [AuthenticatedSessionController::class, 'store'])
-    ->name('login');
-
-Route::post('/register', [RegisteredUserController::class, 'store'])
-    ->name('register');
-
-
+Route::post('/register', [RegisteredUserController::class, 'store'])->name('register');
+Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login');
 Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {
@@ -38,6 +34,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/attendance/{id}', [AttendanceController::class, 'detail'])->name('attendance.detail');
     Route::post('/attendance/{id}/correction-request', [AttendanceController::class, 'requestCorrection'])->name('attendance.correction.request');
 });
+
+Route::get('/stamp_correction_request/list', [CorrectionRequestController::class, 'index'])
+    ->name('correction_request.list');
 
 // 管理者の勤怠一覧画面
 Route::get('/attendance/list', function () {

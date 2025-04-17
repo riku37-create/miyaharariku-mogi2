@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCorrectionDetailsTable extends Migration
+class CreateRequestBreakTimesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateCorrectionDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('correction_details', function (Blueprint $table) {
+        Schema::create('request_break_times', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('break_time_id')->constrained()->onDelete('cascade');
             $table->foreignId('correction_request_id')->constrained()->onDelete('cascade');
-            $table->morphs('correctable'); // correctable_id, correctable_type
-            $table->dateTime('corrected_start')->nullable();
-            $table->dateTime('corrected_end')->nullable();
+            $table->dateTime('corrected_break_start')->nullable();
+            $table->dateTime('corrected_break_end')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateCorrectionDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('correction_details');
+        Schema::dropIfExists('request_break_times');
     }
 }
