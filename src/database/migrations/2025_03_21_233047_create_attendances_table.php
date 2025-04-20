@@ -16,9 +16,9 @@ class CreateAttendancesTable extends Migration
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->date('date'); // 勤務日
-            $table->time('clock_in')->nullable(); // 出勤時刻（nullable：最初はnullでOK）
-            $table->time('clock_out')->nullable(); // 退勤時刻
+            $table->date('date');
+            $table->dateTime('clock_in')->nullable();
+            $table->dateTime('clock_out')->nullable();
             $table->integer('total_break')->nullable();
             $table->integer('total_clock')->nullable();
             $table->timestamps();

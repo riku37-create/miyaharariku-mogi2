@@ -21,8 +21,8 @@
             </div>
             <nav class="header-inner__nav">
                 <ul class="nav-list">
+                    <li class="nav-item"><a class="nav-item__a" href="/attendance">勤怠</a></li>
                     <li class="nav-item"><a class="nav-item__a" href="/attendances">勤怠一覧</a></li>
-                    <li class="nav-item"><a class="nav-item__a" href="">スタッフ一覧</a></li>
                     <li class="nav-item"><a class="nav-item__a" href="/stamp_correction_request/list">申請一覧</a></li>
                     <li class="nav-item">
                         @if (Auth::check())

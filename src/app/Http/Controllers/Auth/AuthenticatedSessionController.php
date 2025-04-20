@@ -19,7 +19,7 @@ class AuthenticatedSessionController extends Controller
             $user = Auth::user();
 
             return $user->role === 'admin'
-                ? redirect()->route('admin.attendance.list')
+                ? redirect()->route('admin.attendances.index')
                 : redirect()->route('attendance.show');
         }
 

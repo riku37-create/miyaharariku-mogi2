@@ -20,7 +20,7 @@ class RegisteredUserController extends Controller
 
         // ロールによってリダイレクト
         return $user->role === 'admin'
-            ? redirect()->route('admin.attendance.list')
+            ? redirect()->route('admin.attendances.index')
             : redirect()->route('attendance.show');
     }
 }

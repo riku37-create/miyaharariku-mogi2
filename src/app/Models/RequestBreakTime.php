@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class RequestBreakTime extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'break_time_id',
+        'correction_request_id',
+        'original_break_start',
+        'original_break_end',
+        'corrected_break_start',
+        'corrected_break_end',
+    ];
 }

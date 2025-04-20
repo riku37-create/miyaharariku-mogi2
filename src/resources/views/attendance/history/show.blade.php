@@ -19,21 +19,28 @@
         </tr>
         <tr>
             <th>出勤・退勤</th>
-            <td><input type="text" name="clock_in" placeholder="{{ $attendance->clock_in }}">~<input type="text" name="clock_out" placeholder="{{ $attendance->clock_out }}"></td>
+            <td>
+                <input type="text" name="clock_in" value="{{ old('clock_in', $attendance->clock_in ? $attendance->clock_in->format('H:i') : '-') }}">
+                ~
+                <input type="text" name="clock_out" value="{{ old('clock_out', $attendance->clock_out ? $attendance->clock_out->format('H:i') : '-') }}">
+            </td>
         </tr>
         <tr>
             <th>休憩</th>
             <td>
                 @foreach ($attendance->breaks as $index => $break)
-                <input type="text" name="breaks[{{ $index }}][start]" placeholder="{{ $break->break_start }}">~
-                <input type="text" name="breaks[{{ $index }}][end]" placeholder="{{ $break->break_end }}">
+                <input type="text" name="breaks[{{ $index }}][start]" value="{{ old("breaks.$index.start", $break->break_start ? $break->break_start->format('H:i') : '-') }}">
+                ~
+                <input type="text" name="breaks[{{ $index }}][end]" value="{{ old("breaks.$index.end", $break->break_end ? $break->break_end->format('H:i') : '-') }}">
                 <input type="hidden" name="breaks[{{ $index }}][id]" value="{{ $break->id }}">
                 @endforeach
             </td>
         </tr>
         <tr>
             <th>備考</th>
-            <td><textarea name="reason" id="" cols="30" rows="10"></textarea></td>
+            <td>
+                <textarea name="reason" cols="30" rows="5">{{ old('reason') }}</textarea>
+            </td>
         </tr>
     </table>
     @if ($hasPendingRequest)

@@ -5,7 +5,9 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\AttendanceHistoryController;
 use App\Http\Controllers\CorrectionRequestController;
+use App\Http\Controllers\AdminAttendanceHistoryController;
 
 
 /*
@@ -30,15 +32,18 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/attendance/break-start', [AttendanceController::class, 'breakStart'])->name('attendance.breakStart');
     Route::post('/attendance/break-end', [AttendanceController::class, 'breakEnd'])->name('attendance.breakEnd');
 
-    Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendance.index');
-    Route::get('/attendance/{id}', [AttendanceController::class, 'detail'])->name('attendance.detail');
-    Route::post('/attendance/{id}/correction-request', [AttendanceController::class, 'requestCorrection'])->name('attendance.correction.request');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/attendances', [AttendanceHistoryController::class, 'index'])->name('attendance.index');
+    Route::get('/attendance/{id}', [AttendanceHistoryController::class, 'detail'])->name('attendance.detail');
+    Route::post('/attendance/{attendance}/correction-request', [AttendanceHistoryController::class, 'storeCorrectionRequest'])->name('attendance.correction.request');
+});
+
+// 管理者
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/attendance/list', [AdminAttendanceHistoryController::class, 'index'])->name('admin.attendances.index');
 });
 
 Route::get('/stamp_correction_request/list', [CorrectionRequestController::class, 'index'])
     ->name('correction_request.list');
-
-// 管理者の勤怠一覧画面
-Route::get('/attendance/list', function () {
-    return view('admin.attendance_list');
-})->name('admin.attendance.list');

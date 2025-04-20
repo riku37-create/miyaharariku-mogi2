@@ -12,6 +12,8 @@ class RequestAttendance extends Model
     protected $fillable = [
         'attendance_id',
         'correction_request_id',
+        'original_clock_in',
+        'original_clock_out',
         'corrected_clock_in',
         'corrected_clock_out',
     ];
