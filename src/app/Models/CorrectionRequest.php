@@ -26,9 +26,9 @@ class CorrectionRequest extends Model
         return $this->belongsTo(Attendance::class);
     }
 
-    public function requestAttendances()
+    public function requestAttendance()
     {
-        return $this->hasMany(RequestAttendance::class);
+        return $this->hasOne(RequestAttendance::class);
     }
 
     public function requestBreakTimes()

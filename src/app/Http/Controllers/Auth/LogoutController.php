@@ -11,11 +11,16 @@ class LogoutController extends Controller
 {
     public function logout(Request $request)
     {
+        $user = Auth::user();
+
         Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('register'); // 👈 register画面へリダイレクト
+
+        return redirect()->route(
+            $user->role === 'admin' ? 'admin.login' : 'login'
+        );
     }
 }

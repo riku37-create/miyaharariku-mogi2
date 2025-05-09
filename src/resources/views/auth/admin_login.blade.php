@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/auth/login.css') }}">
+<link rel="stylesheet" href="{{ asset('css/auth/admin_login.css') }}">
 @endsection
 
 @section('content')
 <div class="content">
-    <h2 class="ttl">ログイン</h2>
+    <h2 class="ttl">管理者ログイン</h2>
     <form class="form-content" action="/login" method="post">
         @csrf
         <div class="form-content__group">
@@ -14,26 +14,28 @@
             <input class="group-input" type="text" name="email" value="{{ old('email') }}">
         </div>
         @if ($errors->has('email'))
-            <ul class="error-messages">
+        <div class="form__error">
+            <ul>
                 @foreach ($errors->get('email') as $error)
-                    <li>{{ $error }}</li>
+                <li>{{ $error }}</li>
                 @endforeach
             </ul>
+        </div>
         @endif
         <div class="form-content__group">
             <label class="group-label" for="username_or_email">パスワード</label>
             <input class="group-input" type="password" name="password">
         </div>
         @if ($errors->has('password'))
-            <ul class="error-messages">
+        <div class="form__error">
+            <ul>
                 @foreach ($errors->get('password') as $error)
-                    <li>{{ $error }}</li>
+                <li>{{ $error }}</li>
                 @endforeach
             </ul>
+        </div>
         @endif
-        <button class="form-content__button" type="submit">ログイン</button>
+        <button class="form-content__button" type="submit">管理者ログインする</button>
     </form>
-    <h2 class="form-sub">アカウントをお持でない方</h2>
-    <a class="form-sub__button" href="/register">登録はこちら</a>
 </div>
 @endsection

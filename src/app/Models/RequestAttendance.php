@@ -28,4 +28,10 @@ class RequestAttendance extends Model
         return $this->belongsTo(CorrectionRequest::class);
     }
 
+    protected $casts = [
+        'original_clock_in' => 'datetime',
+        'original_clock_out' => 'datetime',
+        'corrected_clock_in' => 'datetime',
+        'corrected_clock_out' => 'datetime',
+    ];
 }

@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
 
 class Attendance extends Model
 {
@@ -36,6 +35,7 @@ class Attendance extends Model
     }
 
     protected $casts = [
+        'date' => 'date',
         'clock_in' => 'datetime',
         'clock_out' => 'datetime',
     ];
@@ -46,8 +46,8 @@ class Attendance extends Model
         $actualWorkingSeconds = $this->total_clock - $this->total_break;
         $actualWorkingSeconds = max(0, $actualWorkingSeconds); //マイナスを防ぐ
 
-        $h = floor($this->actualWorkingSeconds / 3600);
-        $m = floor(($this->actualWorkingSeconds % 3600) / 60);
+        $h = floor($actualWorkingSeconds / 3600);
+        $m = floor(($actualWorkingSeconds % 3600) / 60);
         return "{$h}時間{$m}分";
     }
 

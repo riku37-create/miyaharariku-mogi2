@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/attendance/history/show.css') }}">
+<link rel="stylesheet" href="{{ asset('css/admin/attendances/show.css') }}">
 @endsection
 
 @section('content')
 <div class="content">
     <h2 class="ttl">勤怠詳細</h2>
-    <form action="{{ route('attendance.correction.request', $attendance->id) }}" method="POST">
+    <form action="{{ route('admin.attendance.update', ['id' => $attendance->id]) }}" method="POST">
         @csrf
         <table>
             <tr>
@@ -37,46 +37,29 @@
                 </td>
             </tr>
             @foreach ($attendance->breaks as $index => $break)
-                <tr>
-                    <th>休憩{{ $index + 1 }}</th> {{-- 休憩番号を表示（indexは0から始まるから+1してる） --}}
-                    <td>
-                        <input type="text" name="breaks[{{ $index }}][start]" value="{{ old("breaks.$index.start", $break->break_start ? $break->break_start->format('H:i') : '-') }}">
-                        ~
-                        <input type="text" name="breaks[{{ $index }}][end]" value="{{ old("breaks.$index.end", $break->break_end ? $break->break_end->format('H:i') : '-') }}">
-                        <input type="hidden" name="breaks[{{ $index }}][id]" value="{{ $break->id }}">
-                        @if ($errors->has("breaks.$index.start") || $errors->has("breaks.$index.end"))
-                            <ul class="error-messages">
-                            @foreach ($errors->get("breaks.$index.start") as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                            @foreach ($errors->get("breaks.$index.end") as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                            </ul>
-                        @endif
-                    </td>
-                </tr>
-            @endforeach
             <tr>
-                <th>備考</th>
+                <th>休憩{{ $index + 1 }}</th> {{-- 休憩番号を表示（indexは0から始まるから+1してる） --}}
                 <td>
-                    <textarea name="reason" cols="30" rows="5">{{ old('reason') }}</textarea>
-                    @if ($errors->has('reason'))
+                    <input type="text" name="breaks[{{ $index }}][start]" value="{{ old("breaks.$index.start", $break->break_start ? $break->break_start->format('H:i') : '-') }}">
+                    ~
+                    <input type="text" name="breaks[{{ $index }}][end]" value="{{ old("breaks.$index.end", $break->break_end ? $break->break_end->format('H:i') : '-') }}">
+                    <input type="hidden" name="breaks[{{ $index }}][id]" value="{{ $break->id }}">
+                    @if ($errors->has("breaks.$index.start") || $errors->has("breaks.$index.end"))
                         <ul class="error-messages">
-                        @foreach ($errors->get('reason') as $error)
+                        @foreach ($errors->get("breaks.$index.start") as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                        @foreach ($errors->get("breaks.$index.end") as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                         </ul>
                     @endif
                 </td>
             </tr>
+            @endforeach
         </table>
         <div class="btn-wrap">
-            @if ($hasPendingRequest)
-            <span class="wait">承認待ち</span>
-            @else
             <button class="btn-submit" type="submit">修正</button>
-            @endif
         </div>
     </form>
 </div>

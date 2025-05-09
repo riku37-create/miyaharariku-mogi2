@@ -1,32 +1,31 @@
 @extends('layouts.app')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/admin/attendances/index.css') }}">
+<link rel="stylesheet" href="{{ asset('css/admin/staff/show.css') }}">
 @endsection
+
+@php
+    $prevMonth = \Carbon\Carbon::parse($month)->subMonth()->format('Y-m');
+    $nextMonth = \Carbon\Carbon::parse($month)->addMonth()->format('Y-m');
+@endphp
 
 @section('content')
 <div class="content">
-    <h2 class="ttl">{{ \Carbon\Carbon::parse($date)->format('Y年m月d日') }}の勤怠</h2>
-
-    <div class="date">
-        <div class="date-prev">
-            <a class="date-prev__link" href="{{ route('admin.attendances.index', ['date' => \Carbon\Carbon::parse($date)->subDay()->toDateString()]) }}">←前日</a>
+    <h2 class="ttl">{{ $user->name }}さんの勤怠</h2>
+    <div class="month">
+        <div class="month-prev">
+            <a class="month-prev__link" href="{{ route('admin.staff.show', ['id' => $user->id, 'month' => $prevMonth]) }}">先月</a>
         </div>
-        <div class="date-center">
-            <form id="dateForm" action="{{ route('admin.attendances.index') }}" method="get" >
-                <input type="date" name="date" value="{{ $date }}" onchange="document.getElementById('dateForm').submit();">
-                {{ \Carbon\Carbon::parse($date)->format('Y年m月d日') }}
-            </form>
-        </div>
-        <div class="date-next">
-            <a class="date-next__link" href="{{ route('admin.attendances.index', ['date' => \Carbon\Carbon::parse($date)->addDay()->toDateString()]) }}">翌日→</a>
+        <div class="month-center">{{ $month }}</div>
+        <div class="month-next">
+            <a class="month-next__link" href="{{ route('admin.staff.show', ['id' => $user->id, 'month' => $nextMonth]) }}">翌月</a>
         </div>
     </div>
 
     <table>
         <thead>
             <tr>
-                <th>名前</th>
+                <th>日付</th>
                 <th>出勤</th>
                 <th>退勤</th>
                 <th>休憩時間</th>
@@ -39,7 +38,7 @@
             @foreach ($attendances as $attendance)
             <tr>
                 <td>
-                    {{ $attendance->user->name }}
+                    {{ $attendance->date}}
                 </td>
                 <td>
                     {{ $attendance->clock_in ? $attendance->clock_in->format('H:i') : '-' }}

@@ -35,6 +35,11 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         Fortify::loginView(function () {
+            // 現在のリクエストパスでビューを分岐
+            if (Request::is('admin/login')) {
+                return view('auth.admin_login');
+            }
+
             return view('auth.login');
         });
 

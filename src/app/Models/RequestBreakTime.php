@@ -17,4 +17,11 @@ class RequestBreakTime extends Model
         'corrected_break_start',
         'corrected_break_end',
     ];
+
+    protected $casts = [
+        'original_break_start' => 'datetime',
+        'original_break_end' => 'datetime',
+        'corrected_break_start' => 'datetime',
+        'corrected_break_end' => 'datetime',
+    ];
 }

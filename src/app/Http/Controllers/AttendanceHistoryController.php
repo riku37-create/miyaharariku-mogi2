@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\AttendanceRequest;
 use App\Models\User;
 use App\Models\Attendance;
 use App\Models\BreakTime;
@@ -15,11 +16,19 @@ use Carbon\Carbon;
 
 class AttendanceHistoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = User::find(Auth::id());
-        $attendances = $user->attendances()->with('breaks')->orderByDesc('date')->get();
-        return view('attendance.history.index', compact('attendances'));
+
+        $month = $request->input('month', Carbon::now()->format('Y-m'));
+
+        $startOfMonth = Carbon::parse($month)->startOfMonth();
+        $endOfMonth = Carbon::parse($month)->endOfMonth();
+        $attendances = Attendance::where('user_id', $user->id)
+            ->whereBetween('date', [$startOfMonth, $endOfMonth])
+            ->orderBy('date')
+            ->get();
+        return view('attendance.history.index', compact('attendances', 'month'));
     }
 
     public function detail($id)
@@ -33,7 +42,7 @@ class AttendanceHistoryController extends Controller
         return view('attendance.history.show', compact('attendance', 'hasPendingRequest'));
     }
 
-    public function storeCorrectionRequest(Request $request, Attendance $attendance)
+    public function storeCorrectionRequest(AttendanceRequest $request, Attendance $attendance)
     {
         DB::transaction(function () use ($request, $attendance) {
             $correctionRequest = CorrectionRequest::create([
@@ -43,8 +52,8 @@ class AttendanceHistoryController extends Controller
                 'reason' => $request->reason,
             ]);
 
-            $clockIn = Carbon::parse($attendance->date . ' ' . $request->input('clock_in'));
-            $clockOut = Carbon::parse($attendance->date . ' ' . $request->input('clock_out'));
+            $clockIn = Carbon::parse($attendance->date)->setTimeFromTimeString($request->input('clock_in'));
+            $clockOut = Carbon::parse($attendance->date)->setTimeFromTimeString($request->input('clock_out'));
 
             RequestAttendance::create([
                 'attendance_id' => $attendance->id,
@@ -58,8 +67,8 @@ class AttendanceHistoryController extends Controller
             foreach ($request->input('breaks', []) as $breakInput) {
                 $originalBreak = BreakTime::find($breakInput['id']);
 
-                $correctedStart = Carbon::parse($attendance->date . ' ' . $breakInput['start']);
-                $correctedEnd = Carbon::parse($attendance->date . ' ' . $breakInput['end']);
+                $correctedStart = Carbon::parse($attendance->date)->setTimeFromTimeString($breakInput['start']);
+                $correctedEnd = Carbon::parse($attendance->date)->setTimeFromTimeString($breakInput['end']);
 
                 RequestBreakTime::create([
                     'break_time_id' => $originalBreak->id,
@@ -72,6 +81,6 @@ class AttendanceHistoryController extends Controller
             }
         });
 
-        return redirect()->route('attendance.index');
+        return redirect()->route('staff.attendances.index');
     }
 }
