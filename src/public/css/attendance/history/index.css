@@ -7,6 +7,7 @@
 
 .month {
     height: 60px;
+    margin-top: 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -28,7 +29,7 @@
     font-weight: 600;
 }
 
-.month-prev__link,
+.month-prev__link:hover,
 .month-next__link:hover {
     opacity: 0.7;
 }

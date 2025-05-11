@@ -5,18 +5,17 @@
 @endsection
 
 @php
-    $prevMonth = \Carbon\Carbon::parse($month)->subMonth()->format('Y-m');
-    $nextMonth = \Carbon\Carbon::parse($month)->addMonth()->format('Y-m');
+    $prevMonth = $month->copy()->subMonth()->format('Y-m');
+    $nextMonth = $month->copy()->addMonth()->format('Y-m');
 @endphp
 
 @section('content')
 <div class="content">
-    <h2> </h2>
     <div class="month">
         <div class="month-prev">
             <a class="month-prev__link" href="{{ route('staff.attendances.index', ['month' => $prevMonth]) }}">先月</a>
         </div>
-        <div class="month-center">{{ $month }}</div>
+        <div class="month-center">{{ $month->format('Y/m') }}</div>
         <div class="month-next">
             <a class="month-next__link" href="{{ route('staff.attendances.index', ['month' => $nextMonth]) }}">翌月</a>
         </div>

@@ -12,7 +12,8 @@ class AdminAttendanceHistoryController extends Controller
 {
     public function index(Request $request)
     {
-        $date = $request->input('date', Carbon::today()->toDateString());
+        $dateInput = $request->input('date', Carbon::today()->toDateString());
+        $date = Carbon::parse($dateInput);
 
         $attendances = Attendance::with('user')
             ->where('date', $date)

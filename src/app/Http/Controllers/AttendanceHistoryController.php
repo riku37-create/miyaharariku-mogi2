@@ -20,10 +20,12 @@ class AttendanceHistoryController extends Controller
     {
         $user = User::find(Auth::id());
 
-        $month = $request->input('month', Carbon::now()->format('Y-m'));
+        $monthInput = $request->input('month', Carbon::now()->format('Y-m'));
+        $month = Carbon::parse($monthInput);
 
         $startOfMonth = Carbon::parse($month)->startOfMonth();
         $endOfMonth = Carbon::parse($month)->endOfMonth();
+
         $attendances = Attendance::where('user_id', $user->id)
             ->whereBetween('date', [$startOfMonth, $endOfMonth])
             ->orderBy('date')

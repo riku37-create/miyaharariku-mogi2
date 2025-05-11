@@ -4,22 +4,27 @@
 <link rel="stylesheet" href="{{ asset('css/admin/attendances/index.css') }}">
 @endsection
 
+@php
+    $prevDate = $date->copy()->subDay()->toDateString();
+    $nextDate = $date->copy()->addDay()->toDateString();
+@endphp
+
 @section('content')
 <div class="content">
     <h2 class="ttl">{{ \Carbon\Carbon::parse($date)->format('Y年m月d日') }}の勤怠</h2>
 
     <div class="date">
         <div class="date-prev">
-            <a class="date-prev__link" href="{{ route('admin.attendances.index', ['date' => \Carbon\Carbon::parse($date)->subDay()->toDateString()]) }}">←前日</a>
+            <a class="date-prev__link" href="{{ route('admin.attendances.index', ['date' => $prevDate]) }}">←前日</a>
         </div>
         <div class="date-center">
             <form id="dateForm" action="{{ route('admin.attendances.index') }}" method="get" >
                 <input type="date" name="date" value="{{ $date }}" onchange="document.getElementById('dateForm').submit();">
-                {{ \Carbon\Carbon::parse($date)->format('Y年m月d日') }}
+                {{ $date->format('Y/m/d') }}
             </form>
         </div>
         <div class="date-next">
-            <a class="date-next__link" href="{{ route('admin.attendances.index', ['date' => \Carbon\Carbon::parse($date)->addDay()->toDateString()]) }}">翌日→</a>
+            <a class="date-next__link" href="{{ route('admin.attendances.index', ['date' => $nextDate]) }}">翌日→</a>
         </div>
     </div>
 
