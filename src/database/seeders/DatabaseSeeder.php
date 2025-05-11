@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use App\Models\Attendance;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,14 +15,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        User::updateOrCreate(
-            ['email' => 'admin@example.com'],
-            [
-                'name' => '管理者',
-                'password' => Hash::make('password123'),
-                'role' => 'admin',
-                'email_verified_at' => now(),
-            ]
-        );
+        // 管理者ユーザー作成
+        User::factory()->create([
+            'name' => '管理者',
+            'email' => 'admin@example.com',
+            'role' => 'admin',
+            'password' => bcrypt('password'),
+        ]);
+
+        // 一般ユーザー作成
+        User::factory(5)->create([
+            'role' => 'user',
+        ])->each(function ($user) {
+            // 各ユーザーに対して勤怠レコードを10日分作成
+            Attendance::factory(10)
+            ->withBreaks(rand(1, 3))
+            ->create([
+                'user_id' => $user->id,
+            ]);
+        });
     }
 }

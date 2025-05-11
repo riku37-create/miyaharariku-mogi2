@@ -100,7 +100,7 @@ class AttendanceController extends Controller
             if (!$b->break_start || !$b->break_end) {
                 return 0;
             }
-            return \Carbon\Carbon::parse($b->break_start)->diffInSeconds(\Carbon\Carbon::parse($b->break_end));
+            return Carbon::parse($b->break_start)->diffInSeconds(Carbon::parse($b->break_end));
         });
 
         // attendancesテーブルに保存
