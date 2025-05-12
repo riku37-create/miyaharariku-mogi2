@@ -12,7 +12,6 @@ class LoginController extends Controller
 
     public function create(Request $request)
     {
-        // リクエストURLに応じてビューを切り替える
         if ($request->is('admin/login')) {
             return view('auth.admin_login');
         }
@@ -22,20 +21,15 @@ class LoginController extends Controller
 
     public function store(LoginRequest $request)
     {
-        $credentials = $request->only('email', 'password');
+        $request->authenticate();
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
+        // セキュリティ対策
+        $request->session()->regenerate();
 
-            $user = Auth::user();
+        $user = Auth::user();
 
-            return $user->role === 'admin'
-                ? redirect()->route('admin.attendances.index')
-                : redirect()->route('attendance.show');
+        return $user->role === 'admin'
+            ? redirect()->route('admin.attendances.index')
+            : redirect()->route('attendance.show');
         }
-
-        return back()->withErrors([
-            'email' => '認証に失敗しました。',
-        ]);
-    }
 }

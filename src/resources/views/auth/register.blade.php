@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['hideHeader' => true])
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/auth/register.css') }}">

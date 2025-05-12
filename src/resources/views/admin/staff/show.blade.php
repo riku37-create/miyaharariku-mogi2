@@ -38,7 +38,7 @@
             @foreach ($attendances as $attendance)
             <tr>
                 <td>
-                    {{ $attendance->date}}
+                    {{ $attendance->date->format('m/d') }}
                 </td>
                 <td>
                     {{ $attendance->clock_in ? $attendance->clock_in->format('H:i') : '-' }}

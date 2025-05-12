@@ -18,9 +18,9 @@
                 <img class="ttl-img" src="{{ asset('logo.svg') }}">
             </div>
             @auth
-                @if (auth()->user()->isAdmin())
+                @if (!isset($hideHeader) && auth()->user()->isAdmin())
                     @include('layouts.header.admin')
-                @else
+                @elseif (!isset($hideHeader))
                     @include('layouts.header.user')
                 @endif
             @endauth

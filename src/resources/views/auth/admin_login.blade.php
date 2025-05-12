@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['hideHeader' => true])
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/auth/admin_login.css') }}">
@@ -15,7 +15,7 @@
         </div>
         @if ($errors->has('email'))
         <div class="form__error">
-            <ul>
+            <ul class="error-messages">
                 @foreach ($errors->get('email') as $error)
                 <li>{{ $error }}</li>
                 @endforeach
@@ -28,7 +28,7 @@
         </div>
         @if ($errors->has('password'))
         <div class="form__error">
-            <ul>
+            <ul class="error-messages">
                 @foreach ($errors->get('password') as $error)
                 <li>{{ $error }}</li>
                 @endforeach

@@ -37,11 +37,15 @@ class AttendanceHistoryController extends Controller
     {
         $attendance = Attendance::with(['user','breaks'])->findOrFail($id);
 
-        $hasPendingRequest = $attendance->correctionRequests()
+        $correctionRequest = CorrectionRequest::where('attendance_id', $attendance->id)
+        ->where('user_id', auth()->id())
         ->where('status', 'pending')
-        ->exists();
+        ->with(['requestAttendance', 'requestBreakTimes'])
+        ->first();
 
-        return view('attendance.history.show', compact('attendance', 'hasPendingRequest'));
+        $hasPendingRequest = $correctionRequest !== null;
+
+        return view('attendance.history.show', compact('attendance', 'correctionRequest', 'hasPendingRequest'));
     }
 
     public function storeCorrectionRequest(AttendanceRequest $request, Attendance $attendance)
@@ -67,19 +71,31 @@ class AttendanceHistoryController extends Controller
             ]);
 
             foreach ($request->input('breaks', []) as $breakInput) {
-                $originalBreak = BreakTime::find($breakInput['id']);
-
                 $correctedStart = Carbon::parse($attendance->date)->setTimeFromTimeString($breakInput['start']);
                 $correctedEnd = Carbon::parse($attendance->date)->setTimeFromTimeString($breakInput['end']);
 
-                RequestBreakTime::create([
-                    'break_time_id' => $originalBreak->id,
-                    'correction_request_id' => $correctionRequest->id,
-                    'original_break_start' => $originalBreak->break_start,
-                    'original_break_end' => $originalBreak->break_end,
-                    'corrected_break_start' => $correctedStart,
-                    'corrected_break_end' => $correctedEnd,
-                ]);
+                if (!empty($breakInput['id'])) {
+                    $originalBreak = BreakTime::find($breakInput['id']);
+
+                    RequestBreakTime::create([
+                        'break_time_id' => $originalBreak->id,
+                        'correction_request_id' => $correctionRequest->id,
+                        'original_break_start' => $originalBreak->break_start,
+                        'original_break_end' => $originalBreak->break_end,
+                        'corrected_break_start' => $correctedStart,
+                        'corrected_break_end' => $correctedEnd,
+                    ]);
+                } else {
+                    // 新規追加休憩
+                    RequestBreakTime::create([
+                        'break_time_id' => null,
+                        'correction_request_id' => $correctionRequest->id,
+                        'original_break_start' => null,
+                        'original_break_end' => null,
+                        'corrected_break_start' => $correctedStart,
+                        'corrected_break_end' => $correctedEnd,
+                    ]);
+                }
             }
         });
 

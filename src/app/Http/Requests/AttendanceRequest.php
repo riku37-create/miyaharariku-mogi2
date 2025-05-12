@@ -29,8 +29,8 @@ class AttendanceRequest extends FormRequest
             'clock_in' => ['required', 'date_format:H:i'],
             'clock_out' => ['required', 'date_format:H:i'],
             'reason' => ['required', 'string'],
-            'breaks.*.start' => ['required', 'date_format:H:i'],
-            'breaks.*.end' => ['required', 'date_format:H:i'],
+            'breaks.*.start' => ['nullable', 'date_format:H:i'],
+            'breaks.*.end' => ['nullable', 'date_format:H:i'],
         ];
     }
 
@@ -54,33 +54,38 @@ class AttendanceRequest extends FormRequest
         $validator->after(function ($validator) {
             $baseDate = $this->route('attendance')->date ?? now();
 
-            try {
+            // 出勤・退勤の時間が両方入力されているときのみ処理
+            if ($this->filled('clock_in') && $this->filled('clock_out')) {
                 $clockIn = Carbon::parse($baseDate)->setTimeFromTimeString($this->input('clock_in'));
                 $clockOut = Carbon::parse($baseDate)->setTimeFromTimeString($this->input('clock_out'));
 
                 if ($clockIn->greaterThan($clockOut)) {
                     $validator->errors()->add('clock_in', '出勤時間もしくは退勤時間が不適切な値です');
                 }
+            }
 
-                foreach ($this->input('breaks', []) as $index => $break) {
-                    if (!empty($break['start']) && !empty($break['end'])) {
-                        try {
-                            $breakStart = Carbon::parse($baseDate)->setTimeFromTimeString($break['start']);
-                            $breakEnd = Carbon::parse($baseDate)->setTimeFromTimeString($break['end']);
+            foreach ($this->input('breaks', []) as $index => $break) {
+                if (!empty($break['start']) && !empty($break['end'])) {
+                    // 時間文字列の形式チェック
+                    if (!preg_match('/^\d{1,2}:\d{2}$/', $break['start']) || !preg_match('/^\d{1,2}:\d{2}$/', $break['end'])) {
+                        continue; // 不正な形式はスキップ
+                    }
 
-                            if ($breakStart->lessThan($clockIn) ||
-                                $breakEnd->greaterThan($clockOut) ||
-                                $breakStart->greaterThan($breakEnd)
-                            ) {
-                                $validator->errors()->add("breaks.$index.start", '休憩時間が勤務時間外です');
-                            }
-                        } catch (\Exception $e) {
-                            $validator->errors()->add("breaks.$index.start", '時間の解析に失敗しました');
+                    $breakStart = Carbon::parse($baseDate)->setTimeFromTimeString($break['start']);
+                    $breakEnd = Carbon::parse($baseDate)->setTimeFromTimeString($break['end']);
+
+                    if ($this->filled('clock_in') && $this->filled('clock_out')) {
+                        $clockIn = Carbon::parse($baseDate)->setTimeFromTimeString($this->input('clock_in'));
+                        $clockOut = Carbon::parse($baseDate)->setTimeFromTimeString($this->input('clock_out'));
+
+                        if ($breakStart->lessThan($clockIn) ||
+                            $breakEnd->greaterThan($clockOut) ||
+                            $breakStart->greaterThan($breakEnd)
+                        ) {
+                            $validator->errors()->add("breaks.$index.start", '休憩時間が勤務時間外です');
                         }
                     }
                 }
-            } catch (\Exception $e) {
-                $validator->errors()->add('clock_in', '時間の解析に失敗しました');
             }
         });
     }
