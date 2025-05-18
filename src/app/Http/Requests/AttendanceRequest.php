@@ -29,8 +29,8 @@ class AttendanceRequest extends FormRequest
             'clock_in' => ['required', 'date_format:H:i'],
             'clock_out' => ['required', 'date_format:H:i'],
             'reason' => ['required', 'string'],
-            'breaks.*.start' => ['nullable', 'date_format:H:i'],
-            'breaks.*.end' => ['nullable', 'date_format:H:i'],
+            'breaks.*.start' => ['nullable','required_with:breaks.*.end', 'date_format:H:i'],
+            'breaks.*.end' => ['nullable','required_with:breaks.*.start', 'date_format:H:i'],
         ];
     }
 

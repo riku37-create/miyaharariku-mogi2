@@ -7,7 +7,7 @@
 @section('content')
 <div class="content">
     <h2 class="ttl">管理者ログイン</h2>
-    <form class="form-content" action="/login" method="post">
+    <form class="form-content" action="{{ route('admin.login.post') }}" method="post">
         @csrf
         <div class="form-content__group">
             <label class="group-label" for="email">メールアドレス</label>

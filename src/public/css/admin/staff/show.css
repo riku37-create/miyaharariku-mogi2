@@ -76,3 +76,44 @@ td a {
 td a:hover {
     opacity: 0.7;
 }
+
+@media screen and (min-width: 768px) and (max-width: 850px) {
+    .content {
+        width: 90%;
+    }
+
+    .month {
+        flex-direction: column;
+        height: auto;
+        gap: 10px;
+        padding: 10px 0;
+        text-align: center;
+    }
+
+    .month-prev__link,
+    .month-next__link {
+        font-size: 14px;
+    }
+
+    .month-center {
+        font-size: 16px;
+    }
+
+    table {
+        font-size: 13px;
+    }
+
+    th, td {
+        padding: 10px 8px;
+        font-size: 12px;
+        word-break: break-word;
+    }
+
+    thead th {
+        font-size: 13px;
+    }
+
+    td a {
+        font-size: 12px;
+    }
+}

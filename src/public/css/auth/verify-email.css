@@ -1,0 +1,31 @@
+.mail {
+    width: 60%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.mail-ttl {
+    text-align: center;
+}
+
+.mail-txt {
+    font-size: 15px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.mail-form {
+    margin-top: 20px;
+}
+
+.form-btn {
+    width: 100%;
+    background-color: #000;
+    color: #fff;
+    border: 0;
+    border-radius: 2px;
+    font-size: 30px;
+    font-weight: 700;
+    cursor: pointer;
+}

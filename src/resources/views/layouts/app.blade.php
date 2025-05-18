@@ -17,13 +17,16 @@
             <div class="header-inner__ttl">
                 <img class="ttl-img" src="{{ asset('logo.svg') }}">
             </div>
-            @auth
-                @if (!isset($hideHeader) && auth()->user()->isAdmin())
-                    @include('layouts.header.admin')
-                @elseif (!isset($hideHeader))
-                    @include('layouts.header.user')
-                @endif
-            @endauth
+            @hasSection('no-header') {{-- ヘッダー非表示 --}}
+            @else
+                @auth
+                    @if (Auth::user()->role === 'admin')
+                        @include('layouts.header.admin')
+                    @else
+                        @include('layouts.header.user')
+                    @endif
+                @endauth
+            @endif
         </div>
     </header>
     <div class="content-main">

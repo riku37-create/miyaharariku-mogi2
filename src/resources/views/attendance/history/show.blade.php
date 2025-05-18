@@ -82,7 +82,7 @@
                 <th>休憩{{ $nextIndex + 1 }}</th>
                 <td>
                     <input type="text" name="breaks[{{ $nextIndex }}][start]" value="{{ old("breaks.$nextIndex.start") }}">
-                    ~
+                    〜
                     <input type="text" name="breaks[{{ $nextIndex }}][end]" value="{{ old("breaks.$nextIndex.end") }}">
                     {{-- 新規追加なので hidden ID は不要 --}}
                     @if ($errors->has("breaks.$nextIndex.start") || $errors->has("breaks.$nextIndex.end"))

@@ -42,3 +42,41 @@ textarea {
     color: #fff;
     cursor: pointer;
 }
+
+@media screen and (min-width: 768px) and (max-width: 850px) {
+    .content {
+        width: 90%;
+    }
+
+    table {
+        font-size: 14px;
+    }
+
+    th, td {
+        padding: 10px;
+        font-size: 13px;
+        display: block;
+        text-align: left;
+    }
+
+    th {
+        font-weight: bold;
+        background-color: #f9f9f9;
+    }
+
+    td input[type="text"] {
+        width: 100%;
+        font-size: 13px;
+    }
+
+    .btn-wrap {
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .btn-submit {
+        width: 100%;
+        font-size: 16px;
+        padding: 10px;
+    }
+}

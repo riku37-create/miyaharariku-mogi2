@@ -28,6 +28,16 @@ class LoginController extends Controller
 
         $user = Auth::user();
 
+        if ($request->routeIs('admin.login.post') && $user->role !== 'admin') {
+            Auth::logout();
+            return back()->withErrors(['email' => '管理者アカウントでログインしてください']);
+        }
+        
+        if ($request->routeIs('login.post') && $user->role === 'admin') {
+            Auth::logout();
+            return back()->withErrors(['email' => '一般ユーザーとしてログインしてください']);
+        }
+
         return $user->role === 'admin'
             ? redirect()->route('admin.attendances.index')
             : redirect()->route('attendance.show');

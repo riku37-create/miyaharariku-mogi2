@@ -10,6 +10,8 @@ use App\Http\Controllers\CorrectionRequestController;
 use App\Http\Controllers\AdminAttendanceHistoryController;
 use App\Http\Controllers\AdminStaffController;
 use App\Http\Controllers\AdminCorrectionRequestController;
+use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 
 /*
@@ -26,9 +28,23 @@ use App\Http\Controllers\AdminCorrectionRequestController;
 Route::get('/admin/login', [LoginController::class, 'create'])->name('admin.login');
 Route::get('/login', [LoginController::class, 'create'])->name('login');
 Route::post('/register', [RegisterController::class, 'store'])->name('register');
-Route::post('/login', [LoginController::class, 'store'])->name('login');
+Route::post('/login', [LoginController::class, 'store'])->name('login.post');
+Route::post('/admin/login', [LoginController::class, 'store'])->name('admin.login.post');
 Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect('/attendance');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('message', '確認メールを再送しました。');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 //勤怠
 Route::middleware(['auth'])->group(function () {
     Route::get('/attendance', [AttendanceController::class, 'show'])->name('attendance.show');
@@ -40,10 +56,12 @@ Route::middleware(['auth'])->group(function () {
 
 //ユーザー
 Route::middleware(['auth'])->group(function () {
+    Route::group(['middleware' => 'verified'], function() {
     Route::get('/attendance/list', [AttendanceHistoryController::class, 'index'])->name('staff.attendances.index');
     Route::get('/attendance/{id}', [AttendanceHistoryController::class, 'detail'])->name('attendance.detail');
     Route::post('/attendance/{attendance}/correction-request', [AttendanceHistoryController::class, 'storeCorrectionRequest'])->name('attendance.correction.request');
     Route::get('/stamp_correction_request/list', [CorrectionRequestController::class, 'index'])->name('staff.correction_requests.index');
+    });
 });
 
 // 管理者

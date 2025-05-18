@@ -15,13 +15,16 @@ class CreateRequestBreakTimesTable extends Migration
     {
         Schema::create('request_break_times', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('break_time_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('break_time_id')->nullable();
             $table->foreignId('correction_request_id')->constrained()->onDelete('cascade');
             $table->dateTime('original_break_start')->nullable();
             $table->dateTime('original_break_end')->nullable();
             $table->dateTime('corrected_break_start')->nullable();
             $table->dateTime('corrected_break_end')->nullable();
             $table->timestamps();
+
+            // 外部キーを個別に追加
+            $table->foreign('break_time_id')->references('id')->on('break_times')->onDelete('cascade');
         });
     }
 

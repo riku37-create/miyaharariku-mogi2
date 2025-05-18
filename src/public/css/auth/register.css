@@ -55,3 +55,44 @@
     text-decoration: none;
     text-align: center;
 }
+
+@media screen and (min-width: 768px) and (max-width: 850px) {
+    .content {
+        width: 90%;
+        padding: 20px;
+    }
+
+    .form-content {
+        gap: 16px;
+    }
+
+    .group-label {
+        font-size: 14px;
+    }
+
+    .group-input {
+        height: 40px;
+        font-size: 14px;
+    }
+
+    .form-content__button {
+        font-size: 24px;
+        padding: 10px 0;
+    }
+
+    .form-sub {
+        font-size: 14px;
+        margin-top: 30px;
+    }
+
+    .form-sub__button {
+        font-size: 14px;
+        padding: 10px 0;
+    }
+
+    .error-messages {
+        font-size: 13px;
+        color: red;
+        padding-left: 10px;
+    }
+}
