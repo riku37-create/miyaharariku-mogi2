@@ -18,7 +18,6 @@ class LogoutController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-
         return redirect()->route(
             $user->role === 'admin' ? 'admin.login' : 'login'
         );

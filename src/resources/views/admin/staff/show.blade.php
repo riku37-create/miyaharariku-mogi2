@@ -60,5 +60,10 @@
             @endforeach
         </tbody>
     </table>
+    <div class="export-button">
+    <a href="{{ route('admin.staff.attendances.export', ['id' => $user->id, 'month' => $month]) }}" class="btn btn-export">
+        CSV出力
+    </a>
+    </div>
 </div>
 @endsection
