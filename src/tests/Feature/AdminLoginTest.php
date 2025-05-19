@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\User;
 
-class LoginAdminTest extends TestCase
+class AdminLoginTest extends TestCase
 {
     /**
      * A basic feature test example.
@@ -20,7 +20,6 @@ class LoginAdminTest extends TestCase
     {
         parent::setUp();
 
-        // 管理者ユーザーを1名作成
         User::factory()->create([
             'email' => 'admin@example.com',
             'password' => bcrypt('password123'),

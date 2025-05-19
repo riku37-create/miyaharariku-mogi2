@@ -17,7 +17,7 @@ class AdminStaffController extends Controller
         return view('admin.staff.index', compact('users'));
     }
 
-    public function show(Request $request, $id)
+    public function detail(Request $request, $id)
     {
         $user = User::findOrFail($id);
 

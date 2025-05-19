@@ -14,17 +14,23 @@
     border-radius: 10px;
 }
 
+.date-prev__link,
+.date-next__link {
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: bold;
+    color: #000;
+    cursor: pointer;
+}
+
 .date-center {
     font-size: 20px;
     font-weight: 600;
 }
 
-.date-prev__link,
-.date-next__link {
-    text-decoration: none;
-    font-size: 15px;
-    color: #000;
-    cursor: pointer;
+.date-prev__link:hover,
+.date-next__link:hover {
+    opacity: 0.7;
 }
 
 table {
@@ -61,7 +67,6 @@ thead th::after {
     background-color: #007bff;
 }
 
-/* 詳細リンクのスタイル */
 td a {
     text-decoration: none;
     color: #000;
@@ -78,11 +83,9 @@ td a:hover {
     }
 
     .date {
-        flex-direction: column;
         height: auto;
         gap: 10px;
         padding: 10px 0;
-        text-align: center;
     }
 
     .date-prev__link,

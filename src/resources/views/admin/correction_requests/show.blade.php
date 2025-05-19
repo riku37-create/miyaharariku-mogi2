@@ -53,22 +53,27 @@
     <h4>休憩</h4>
     <table>
         @foreach ($request->requestBreakTimes as $break)
-        <tr>
-            <th>元の開始・終了</th>
-            <td>
-                {{ $break->original_break_start->format('H:i') }}
-                〜
-                {{ $break->original_break_end->format('H:i') }}
-            </td>
-        </tr>
-        <tr>
-            <th>修正開始・修正終了</th>
-            <td>
-                {{ $break->corrected_break_start->format('H:i') }}
-                〜
-                {{ $break->corrected_break_end->format('H:i') }}
-            </td>
-        </tr>
+            @php
+                $hasOriginal = filled($break->original_break_start) && filled($break->original_break_end);
+            @endphp
+            @if($hasOriginal)
+                <tr>
+                    <th>元の開始・終了</th>
+                    <td>
+                        {{ $break->original_break_start->format('H:i') }}
+                        〜
+                        {{ $break->original_break_end->format('H:i') }}
+                    </td>
+                </tr>
+            @endif
+            <tr>
+                <th>修正開始・修正終了</th>
+                <td>
+                    {{ $break->corrected_break_start->format('H:i') }}
+                    〜
+                    {{ $break->corrected_break_end->format('H:i') }}
+                </td>
+            </tr>
         @endforeach
     </table>
     <div class="btn-wrap">

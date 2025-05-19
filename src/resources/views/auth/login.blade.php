@@ -4,6 +4,8 @@
 <link rel="stylesheet" href="{{ asset('css/auth/login.css') }}">
 @endsection
 
+@section('no-header', true)
+
 @section('content')
 <div class="content">
     <h2 class="ttl">ログイン</h2>
@@ -34,6 +36,6 @@
         <button class="form-content__button" type="submit">ログイン</button>
     </form>
     <h2 class="form-sub">アカウントをお持でない方</h2>
-    <a class="form-sub__button" href="/register">登録はこちら</a>
+    <a class="form-sub__button" href="{{ route('register') }}">登録はこちら</a>
 </div>
 @endsection

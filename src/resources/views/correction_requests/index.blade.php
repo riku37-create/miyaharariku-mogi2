@@ -9,11 +9,11 @@
     <h2 class="ttl">修正申請一覧</h2>
     <div class="tabs">
         <a href="{{ route('staff.correction_requests.index', ['status' => 'pending']) }}"
-           class="tab-button {{ request('status', 'pending') === 'pending' ? 'active' : '' }}">
+        class="tab-button {{ request('status', 'pending') === 'pending' ? 'active' : '' }}">
             承認待ち
         </a>
         <a href="{{ route('staff.correction_requests.index', ['status' => 'approved']) }}"
-           class="tab-button {{ request('status') === 'approved' ? 'active' : '' }}">
+        class="tab-button {{ request('status') === 'approved' ? 'active' : '' }}">
             承認済み
         </a>
     </div>

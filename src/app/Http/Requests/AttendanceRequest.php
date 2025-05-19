@@ -42,8 +42,8 @@ class AttendanceRequest extends FormRequest
             'clock_out.required' => '退勤時間は必須です。',
             'clock_out.date_format' => '退勤時間の形式が不正です。',
             'reason.required' => '備考を記入してください',
-            'breaks.*.start.required' => '休憩開始時間は必須です。',
-            'breaks.*.end.required' => '休憩終了時間は必須です。',
+            'breaks.*.start.required_with' => '休憩時間の開始・終了の両方を入力してください',
+            'breaks.*.end.required_with' => '休憩時間の開始・終了の両方を入力してください',
             'breaks.*.start.date_format' => '休憩開始時間の形式が不正です。',
             'breaks.*.end.date_format' => '休憩終了時間の形式が不正です。',
         ];

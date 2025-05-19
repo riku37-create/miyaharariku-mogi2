@@ -24,7 +24,7 @@ class AdminCorrectionRequestController extends Controller
         return view("admin.correction_requests.index", compact('pendingRequests'));
     }
 
-    public function show($attendance_correct_request)
+    public function detail($attendance_correct_request)
     {
         $request = CorrectionRequest::with(['attendance', 'user', 'requestAttendance', 'requestBreakTimes'])->findOrFail($attendance_correct_request);
 

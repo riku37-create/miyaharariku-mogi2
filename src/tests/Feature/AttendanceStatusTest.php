@@ -16,10 +16,9 @@ class AttendanceStatusTest extends TestCase
 
     use RefreshDatabase;
 
-    /** @test */
-    public function 勤務外の場合_ステータスが勤務外と表示される()
+    public function test_勤務外の場合_ステータスが勤務外と表示される()
     {
-        /** @var \App\Models\User $user */
+        /** @var \App\Models\User */
         $user = User::factory()->create();
         $this->actingAs($user);
 
@@ -31,14 +30,13 @@ class AttendanceStatusTest extends TestCase
         $response->assertSee('勤務外');
     }
 
-    /** @test */
-    public function 出勤中の場合_ステータスが勤務中と表示される()
+    public function test_出勤中の場合_ステータスが勤務中と表示される()
     {
-        /** @var \App\Models\User $user */
+        /** @var \App\Models\User */
         $user = User::factory()->create();
         $this->actingAs($user);
 
-        // 出勤打刻（＝出勤中の状態を作る）
+        // 出勤打刻
         $this->post(route('attendance.clockIn'));
 
         // 打刻画面にアクセス
@@ -49,10 +47,9 @@ class AttendanceStatusTest extends TestCase
         $response->assertSee('勤務中');
     }
 
-    /** @test */
-    public function 休憩中の場合_ステータスが休憩中と表示される()
+    public function test_休憩中の場合_ステータスが休憩中と表示される()
     {
-        /** @var \App\Models\User $user */
+        /** @var \App\Models\User */
         $user = User::factory()->create();
         $this->actingAs($user);
 
@@ -69,10 +66,9 @@ class AttendanceStatusTest extends TestCase
         $response->assertSee('休憩中');
     }
 
-    /** @test */
-    public function 退勤済の場合_ステータスが退勤済と表示される()
+    public function test_退勤済の場合_ステータスが退勤済と表示される()
     {
-        /** @var \App\Models\User $user */
+        /** @var \App\Models\User */
         $user = User::factory()->create();
         $this->actingAs($user);
 

@@ -29,7 +29,6 @@ class DatabaseSeeder extends Seeder
         ])->each(function ($user) {
             // 各ユーザーに対して勤怠レコードを10日分作成
             Attendance::factory(10)
-            ->withBreaks(rand(1, 3))
             ->create([
                 'user_id' => $user->id,
             ]);

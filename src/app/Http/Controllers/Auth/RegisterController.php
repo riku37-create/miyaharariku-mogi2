@@ -10,6 +10,11 @@ use Illuminate\Auth\Events\Registered;
 
 class RegisterController extends Controller
 {
+    public function show()
+    {
+        return view('auth.register');
+    }
+
     public function store(RegisterRequest $request, CreateNewUser $creator)
     {
         $user = $creator->create($request->all());

@@ -84,7 +84,6 @@ td a:hover {
     }
 
     .month {
-        flex-direction: column;
         height: auto;
         padding: 10px 0;
         gap: 10px;

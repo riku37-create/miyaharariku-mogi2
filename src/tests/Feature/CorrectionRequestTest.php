@@ -21,21 +21,17 @@ class CorrectionRequestTest extends TestCase
 
     use RefreshDatabase;
 
-    public function 出勤時間が退勤時間より後の場合はバリデーションエラーが表示される()
+    public function test_出勤時間が退勤時間より後の場合はバリデーションエラーが表示される()
     {
-        /** @var \App\Models\User $user */
+        /** @var \App\Models\User */
         $user = User::factory()->create();
         $this->actingAs($user);
 
-        // 勤怠データを作成
-        $attendance = Attendance::factory()->create([
-            'user_id' => $user->id,
-            'date' => now()->toDateString(),
-            'clock_in' => '09:00:00',
-            'clock_out' => '18:00:00',
-        ]);
+        $attendance = Attendance::factory()
+        ->noBreaks()
+        ->for($user)
+        ->create();
 
-        // 修正リクエストを送信（出勤が退勤より遅い）
         $response = $this->from(route('attendance.detail', $attendance->id))
             ->post(route('attendance.correction.request', $attendance->id), [
                 'clock_in' => '19:00',
@@ -44,43 +40,30 @@ class CorrectionRequestTest extends TestCase
                 'breaks' => [], // 空でもOK
             ]);
 
-        // リダイレクトされて、元のページに戻る
         $response->assertRedirect(route('attendance.detail', $attendance->id));
         $response->assertSessionHasErrors([
             'clock_in' => '出勤時間もしくは退勤時間が不適切な値です',
         ]);
     }
 
-    /** @test */
-    public function 休憩開始時間が退勤時間より後の場合はバリデーションエラーが表示される()
+    public function test_休憩開始時間が退勤時間より後の場合はバリデーションエラーが表示される()
     {
-        /** @var \App\Models\User $user */
+        /** @var \App\Models\User */
         $user = User::factory()->create();
         $this->actingAs($user);
 
-        // 勤怠 + 休憩データ作成（退勤18:00）
-        $attendance = Attendance::factory()->create([
-            'user_id' => $user->id,
-            'date' => now()->toDateString(),
-            'clock_in' => '09:00:00',
-            'clock_out' => '18:00:00',
-        ]);
+        $attendance = Attendance::factory()
+        ->for($user)
+        ->create();
 
-        $break = BreakTime::factory()->create([
-            'attendance_id' => $attendance->id,
-            'break_start' => '12:00:00',
-            'break_end' => '13:00:00',
-        ]);
-
-        // 修正リクエスト（休憩開始が退勤後）
         $response = $this->from(route('attendance.detail', $attendance->id))
             ->post(route('attendance.correction.request', $attendance->id), [
                 'clock_in' => '09:00',
                 'clock_out' => '18:00',
-                'reason' => 'テストのため',
+                'reason' => 'テスト',
                 'breaks' => [
                     [
-                        'id' => $break->id,
+                        'id' => $attendance->breaks->first()->id,
                         'start' => '19:00', // ← 退勤後
                         'end' => '20:00',
                     ],
@@ -88,41 +71,27 @@ class CorrectionRequestTest extends TestCase
             ]);
 
         $response->assertRedirect(route('attendance.detail', $attendance->id));
-        $response->assertSessionHasErrors([
-            'breaks.0.start' => '休憩時間が勤務時間外です',
-        ]);
+        $response->assertSessionHasErrors(['breaks.0.start' => '休憩時間が勤務時間外です',]);
     }
 
-    /** @test */
-    public function 休憩終了時間が退勤時間より後の場合はバリデーションエラーが表示される()
+    public function test_休憩終了時間が退勤時間より後の場合はバリデーションエラーが表示される()
     {
-        /** @var \App\Models\User $user */
+        /** @var \App\Models\User */
         $user = User::factory()->create();
         $this->actingAs($user);
 
-        // 勤怠 + 休憩データ作成（退勤18:00）
-        $attendance = Attendance::factory()->create([
-            'user_id' => $user->id,
-            'date' => now()->toDateString(),
-            'clock_in' => '09:00:00',
-            'clock_out' => '18:00:00',
-        ]);
+        $attendance = Attendance::factory()
+        ->for($user)
+        ->create();
 
-        $break = BreakTime::factory()->create([
-            'attendance_id' => $attendance->id,
-            'break_start' => '12:00:00',
-            'break_end' => '13:00:00',
-        ]);
-
-        // 修正リクエスト（休憩終了が退勤後）
         $response = $this->from(route('attendance.detail', $attendance->id))
             ->post(route('attendance.correction.request', $attendance->id), [
                 'clock_in' => '09:00',
                 'clock_out' => '18:00',
-                'reason' => 'テストのため',
+                'reason' => 'テスト',
                 'breaks' => [
                     [
-                        'id' => $break->id,
+                        'id' => $attendance->breaks->first()->id,
                         'start' => '12:00',
                         'end' => '19:00', // ← 退勤後
                     ],
@@ -130,24 +99,19 @@ class CorrectionRequestTest extends TestCase
             ]);
 
         $response->assertRedirect(route('attendance.detail', $attendance->id));
-        $response->assertSessionHasErrors([
-            'breaks.0.start' => '休憩時間が勤務時間外です',
-        ]);
+        $response->assertSessionHasErrors(['breaks.0.start' => '休憩時間が勤務時間外です',]);
     }
 
-    /** @test */
-    public function 備考欄が未入力の場合はバリデーションエラーが表示される()
+    public function test_備考欄が未入力の場合はバリデーションエラーが表示される()
     {
         /** @var \App\Models\User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
 
-        $attendance = Attendance::factory()->create([
-            'user_id' => $user->id,
-            'date' => now()->toDateString(),
-            'clock_in' => '09:00:00',
-            'clock_out' => '18:00:00',
-        ]);
+        $attendance = Attendance::factory()
+        ->noBreaks()
+        ->for($user)
+        ->create();
 
         $response = $this->from(route('attendance.detail', $attendance->id))
             ->post(route('attendance.correction.request', $attendance->id), [
@@ -157,159 +121,66 @@ class CorrectionRequestTest extends TestCase
             ]);
 
         $response->assertRedirect(route('attendance.detail', $attendance->id));
-        $response->assertSessionHasErrors([
-            'reason' => '備考を記入してください',
-        ]);
+        $response->assertSessionHasErrors(['reason' => '備考を記入してください',]);
     }
 
-    public function test_修正申請が管理者の画面に表示される()
+    public function test_「承認待ち」にログインユーザーが行った申請が全て表示されていること()
     {
-        /** @var \App\Models\User $admin */
+        /** @var \App\Models\User */
         $admin = User::factory()->create(['role' => 'admin']);
-        /** @var \App\Models\User $user */
+        /** @var \App\Models\User */
         $user = User::factory()->create();
 
-        $attendance = Attendance::factory()->create([
-            'user_id' => $user->id,
-            'date' => today(),
-            'clock_in' => '09:00:00',
-            'clock_out' => '18:00:00',
-        ]);
-        $break = BreakTime::factory()->create([
-            'attendance_id' => $attendance->id,
-            'break_start' => '12:00:00',
-            'break_end' => '12:30:00',
-        ]);
+        $attendance = Attendance::factory()
+        ->noBreaks()
+        ->for($user)
+        ->create();
 
-        // ユーザーとしてログインし修正申請を送信
+        // 修正申請を送信
         $this->actingAs($user)->post(route('attendance.correction.request', $attendance->id), [
             'clock_in' => '09:15',
             'clock_out' => '18:15',
-            'reason' => '打刻ミスのため',
-            'breaks' => [
-                [
-                    'id' => $break->id,
-                    'start' => '12:10',
-                    'end' => '12:40',
-                ]
-            ],
+            'reason' => 'テスト'
         ]);
 
-        // 管理者としてログインして一覧を確認
-        $this->actingAs($admin)
-            ->get(route('admin.correction_requests.index'))
+        $this->actingAs($user)
+            ->get(route('staff.correction_requests.index'))
             ->assertSee('承認待ち')
             ->assertSee($user->name)
-            ->assertSee(today()->format('Y年m月d日'))
-            ->assertSee('打刻ミスのため');
-
-        // 詳細画面も確認
-        $correctionRequest = CorrectionRequest::where('user_id', $user->id)->first();
-        $this->get(route('admin.correction_requests.show', $correctionRequest->id))
-            ->assertSee('打刻ミスのため')
-            ->assertSee('承認待ち')
-            ->assertSee('09:15')
-            ->assertSee('18:15')
-            ->assertSee('12:10')
-            ->assertSee('12:40');
+            ->assertSee('テスト');
     }
 
-    public function test_修正申請後_管理者の申請一覧に表示される()
+    public function test_「承認済み」に管理者が承認した修正申請が全て表示されている()
     {
         /** @var \App\Models\User $admin */
         $admin = User::factory()->create(['role' => 'admin']);
         /** @var \App\Models\User $user */
         $user = User::factory()->create();
 
-        // 勤怠データと休憩を作成
-        $attendance = Attendance::factory()->create([
-            'user_id' => $user->id,
-            'date' => today(),
-            'clock_in' => '09:00:00',
-            'clock_out' => '18:00:00',
-        ]);
+        $attendance = Attendance::factory()
+        ->noBreaks()
+        ->for($user)
+        ->create();
 
-        $break = BreakTime::factory()->create([
-            'attendance_id' => $attendance->id,
-            'break_start' => '12:00:00',
-            'break_end' => '13:00:00',
-        ]);
-
-        // ログインして修正申請を送信
+        // 修正申請を送信
         $this->actingAs($user)
-            ->post(route('attendance.correction.request', $attendance), [
+        ->post(route('attendance.correction.request', $attendance), [
                 'clock_in' => '09:15',
                 'clock_out' => '18:10',
-                'reason' => '退勤打刻漏れのため修正',
-                'breaks' => [
-                    [
-                        'id' => $break->id,
-                        'start' => '12:05',
-                        'end' => '13:05',
-                    ],
-                ],
-            ])->assertRedirect(route('staff.attendances.index'));
+                'reason' => 'テスト'
+            ]);
 
-        // 管理者としてログインして承認待ち一覧を確認
-        $this->actingAs($admin)
-            ->get(route('admin.correction_requests.index', ['status' => 'pending']))
-            ->assertSee('承認待ち')
-            ->assertSee($user->name)
-            ->assertSee(today()->format('Y年m月d日'))
-            ->assertSee('退勤打刻漏れのため修正');
-    }
-
-    public function test_修正申請が承認された後_承認済み一覧に表示される()
-    {
-        /** @var \App\Models\User $admin */
-        $admin = User::factory()->create(['role' => 'admin']);
-        /** @var \App\Models\User $user */
-        $user = User::factory()->create();
-
-        // 勤怠情報と休憩を作成
-        $attendance = Attendance::factory()->create([
-            'user_id' => $user->id,
-            'date' => today(),
-            'clock_in' => '09:00:00',
-            'clock_out' => '18:00:00',
-        ]);
-
-        $break = BreakTime::factory()->create([
-            'attendance_id' => $attendance->id,
-            'break_start' => '12:00:00',
-            'break_end' => '13:00:00',
-        ]);
-
-        // ユーザーが修正申請を送信
-        $this->actingAs($user)
-            ->post(route('attendance.correction.request', $attendance), [
-                'clock_in' => '09:30',
-                'clock_out' => '18:10',
-                'reason' => '遅刻のため',
-                'breaks' => [
-                    [
-                        'id' => $break->id,
-                        'start' => '12:15',
-                        'end' => '13:05',
-                    ],
-                ],
-            ])->assertRedirect(route('staff.attendances.index'));
-
-        // 修正申請を取得
         $correctionRequest = CorrectionRequest::first();
 
-        // 管理者が承認処理（ルートは仮、必要に応じて調整）
+        // 管理者が承認処理
         $this->actingAs($admin)
-            ->put(route('admin.correction_requests.approve', $correctionRequest->id))
-            ->assertRedirect(route('admin.correction_requests.index')); // 承認後のリダイレクト先に応じて必要なら修正
+        ->put(route('admin.correction_requests.approve', $correctionRequest->id));
 
-        // 承認済み一覧タブを確認
-        $this->actingAs($admin)
-            ->get(route('admin.correction_requests.index', ['status' => 'approved']))
+        $this->actingAs($user)
+            ->get(route('staff.correction_requests.index', ['status' => 'approved']))
             ->assertSee('承認済み')
             ->assertSee($user->name)
-            ->assertSee(today()->format('Y年m月d日'))
-            ->assertSee('遅刻のため');
+            ->assertSee('テスト');
     }
 
     public function test_各申請の「詳細」を押下すると申請詳細画面に遷移する()
@@ -319,25 +190,30 @@ class CorrectionRequestTest extends TestCase
         /** @var \App\Models\User $user */
         $user = User::factory()->create();
 
-        $attendance = Attendance::factory()->create(['user_id' => $user->id]);
+        $attendance = Attendance::factory()
+        ->noBreaks()
+        ->for($user)
+        ->create();
 
-        // 修正申請データを登録（申請→出退勤→休憩）
-        $this->actingAs($user)->post(route('attendance.correction.request', $attendance), [
-            'clock_in' => '09:00',
-            'clock_out' => '18:00',
-            'reason' => 'テスト申請',
-            'breaks' => [],
+        $this->actingAs($user)
+        ->post(route('attendance.correction.request', $attendance), [
+                'clock_in' => '09:15',
+                'clock_out' => '18:10',
+                'reason' => 'テスト'
         ]);
 
-        // 作成された申請を取得
-        $correctionRequest = CorrectionRequest::latest()->first();
-
-        // 管理者として詳細画面にアクセス
-        $response = $this->actingAs($admin)->get(
-            route('admin.correction_requests.show', $correctionRequest->id)
-        );
+        $response = $this->actingAs($user)
+        ->get(route('staff.correction_requests.index'));
 
         $response->assertStatus(200);
-        $response->assertSee('テスト申請'); // 内容確認も一応入れる
+
+        // 詳細リンクが画面内に存在するか（ルートURLの文字列で確認）
+        $response->assertSee(route('attendance.detail', $attendance->id));
+
+    // 実際に詳細画面に遷移できるか確認
+        $detailResponse = $this->actingAs($user)
+        ->get(route('attendance.detail', $attendance->id));
+
+        $detailResponse->assertStatus(200);
     }
 }

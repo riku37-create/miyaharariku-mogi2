@@ -2,13 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\User;
 use App\Models\Attendance;
 use App\Models\BreakTime;
-use App\Models\CorrectionRequest;
-use App\Models\CorrectionDetail;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
@@ -18,8 +13,8 @@ class AttendanceController extends Controller
     public function show()
     {
         $user = Auth::user();
-        $today = Carbon::today()->toDateString();
-        $nowTime = Carbon::now()->toTimeString();
+        $today = Carbon::today();
+        $nowTime = Carbon::now()->format('H:i');
         $attendance = Attendance::where('user_id', $user->id)->where('date', $today)->first();
         $latestBreak = null;
         $isOnBreak = false;

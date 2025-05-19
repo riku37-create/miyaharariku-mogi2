@@ -75,11 +75,6 @@ class AttendanceHistoryController extends Controller
                     continue;
                 }
 
-                // 片方だけ空ならバリデーションエラー
-                if (empty($breakInput['start']) || empty($breakInput['end'])) {
-                    throw new \Exception('休憩時間の開始・終了の両方を入力してください');
-                }
-
                 $correctedStart = Carbon::parse($attendance->date)->setTimeFromTimeString($breakInput['start']);
                 $correctedEnd = Carbon::parse($attendance->date)->setTimeFromTimeString($breakInput['end']);
 

@@ -20,10 +20,6 @@
 
 .header-inner__nav {
     width: 40%;
-    display: flex;
-}
-
-.header-inner__nav {
     padding: 10px 20px;
     display: flex;
     justify-content: flex-end;
@@ -32,6 +28,7 @@
 
 .nav-list {
     display: flex;
+    align-items: center;
     list-style: none;
     margin: 0;
     padding: 0;

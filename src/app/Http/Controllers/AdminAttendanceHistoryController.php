@@ -77,5 +77,4 @@ class AdminAttendanceHistoryController extends Controller
 
         return redirect()->route('admin.attendances.index');
     }
-
 }

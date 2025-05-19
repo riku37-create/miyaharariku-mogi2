@@ -21,9 +21,9 @@
             <tr>
                 <th>出勤・退勤</th>
                 <td>
-                    <input type="text" name="clock_in" value="{{ old('clock_in', $attendance->clock_in ? $attendance->clock_in->format('H:i') : '-') }}">
+                    <input type="text" name="clock_in" value="{{ old('clock_in', $attendance->clock_in ? $attendance->clock_in->format('H:i') : '') }}">
                     ~
-                    <input type="text" name="clock_out" value="{{ old('clock_out', $attendance->clock_out ? $attendance->clock_out->format('H:i') : '-') }}">
+                    <input type="text" name="clock_out" value="{{ old('clock_out', $attendance->clock_out ? $attendance->clock_out->format('H:i') : '') }}">
                     @if ($errors->has('clock_in') || $errors->has('clock_out'))
                         <ul class="error-messages">
                         @foreach ($errors->get('clock_in') as $error)
@@ -40,9 +40,9 @@
             <tr>
                 <th>休憩{{ $index + 1 }}</th> {{-- 休憩番号を表示（indexは0から始まるから+1してる） --}}
                 <td>
-                    <input type="text" name="breaks[{{ $index }}][start]" value="{{ old("breaks.$index.start", $break->break_start ? $break->break_start->format('H:i') : '-') }}">
+                    <input type="text" name="breaks[{{ $index }}][start]" value="{{ old("breaks.$index.start", $break->break_start ? $break->break_start->format('H:i') : '') }}">
                     ~
-                    <input type="text" name="breaks[{{ $index }}][end]" value="{{ old("breaks.$index.end", $break->break_end ? $break->break_end->format('H:i') : '-') }}">
+                    <input type="text" name="breaks[{{ $index }}][end]" value="{{ old("breaks.$index.end", $break->break_end ? $break->break_end->format('H:i') : '') }}">
                     <input type="hidden" name="breaks[{{ $index }}][id]" value="{{ $break->id }}">
                     @if ($errors->has("breaks.$index.start") || $errors->has("breaks.$index.end"))
                         <ul class="error-messages">

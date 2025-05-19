@@ -34,27 +34,27 @@
         </thead>
         <tbody>
             @foreach ($attendances as $attendance)
-            <tr>
-                <td>
-                    {{ $attendance->date->locale('ja')->isoFormat('M/D（ddd）') }}
-                </td>
-                <td>
-                    {{ $attendance->clock_in ? $attendance->clock_in->format('H:i') : '-' }}
-                </td>
-                <td>
-                    {{ $attendance->clock_out ? $attendance->clock_out->format('H:i') : '-' }}
-                </td>
-                <td>
-                    {{ $attendance->formatted_total_break }}
-                </td>
-                <td>
-                    {{ $attendance->formatted_total_clock }}
-                </td>
-                <td>
-                    {{ $attendance->formatted_total_raw }}
-                </td>
-                <td><a href="{{ route('attendance.detail', ['id' => $attendance->id]) }}">詳細</a></td>
-            </tr>
+                <tr>
+                    <td>
+                        {{ $attendance->date->locale('ja')->isoFormat('M/D（ddd）') }}
+                    </td>
+                    <td>
+                        {{ $attendance->clock_in ? $attendance->clock_in->format('H:i') : '' }}
+                    </td>
+                    <td>
+                        {{ $attendance->clock_out ? $attendance->clock_out->format('H:i') : '' }}
+                    </td>
+                    <td>
+                        {{ $attendance->formatted_total_break }}
+                    </td>
+                    <td>
+                        {{ $attendance->formatted_total_clock }}
+                    </td>
+                    <td>
+                        {{ $attendance->formatted_total_raw }}
+                    </td>
+                    <td><a href="{{ route('attendance.detail', ['id' => $attendance->id]) }}">詳細</a></td>
+                </tr>
             @endforeach
         </tbody>
     </table>

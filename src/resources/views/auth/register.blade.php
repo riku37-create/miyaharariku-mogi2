@@ -4,11 +4,13 @@
 <link rel="stylesheet" href="{{ asset('css/auth/register.css') }}">
 @endsection
 
+@section('no-header', true)
+
 @section('content')
 <div class="content">
     <h2 class="ttl">会員登録</h2>
     <form class="form-content" action="/register" method="post">
-    @csrf
+        @csrf
         <div class="form-content__group">
             <label class="group-label" for="name">ユーザー名</label>
             <input class="group-input" type="text" name="name" value="{{ old('name') }}">

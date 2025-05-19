@@ -13,9 +13,9 @@
     <p class="mail-txt">メールを確認し、リンクをクリックして認証を完了してください。</p>
     <a href="https://mailtrap.io/home">認証はこちらから</a>
     @if (session('status') == 'verification-link-sent')
-    <div class="alert alert-success">
-        新しい認証リンクが送信されました。メールを確認してください。
-    </div>
+        <div class="alert alert-success">
+            新しい認証リンクが送信されました。メールを確認してください。
+        </div>
     @endif
     <form class="mail-form" method="POST" action="{{ route('verification.send') }}">
         @csrf

@@ -71,19 +71,20 @@ class RegisterTest extends TestCase
         $response->assertSessionHasErrors(['password' => 'パスワードを入力してください']);
     }
 
-    // public function test_フォームに内容が入力されていた場合_データが正常に保存される()
-    // {
-    //     $response = $this->post('/register', [
-    //         'name' => 'テスト太郎',
-    //         'email' => 'test@example.com',
-    //         'password' => 'password123',
-    //         'password_confirmation' => 'password123',
-    //     ]);
+    public function test_フォームに内容が入力されていた場合_データが正常に保存される()
+    {
+        $response = $this->post('/register', [
+            'name' => 'テスト太郎',
+            'email' => 'test@example.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ]);
 
+        $response->assertStatus(302);
 
-    //     $response->assertDatabaseHas('users', [
-    //         'name' => 'テスト太郎',
-    //         'email' => 'test@example.com',
-    //     ]);
-    // }
+        $this->assertDatabaseHas('users', [
+            'name' => 'テスト太郎',
+            'email' => 'test@example.com',
+        ]);
+    }
 }
