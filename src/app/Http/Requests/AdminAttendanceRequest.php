@@ -36,14 +36,14 @@ class AdminAttendanceRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'clock_in.required' => '出勤時間は必須です。',
-            'clock_in.date_format' => '出勤時間の形式が不正です。',
-            'clock_out.required' => '退勤時間は必須です。',
-            'clock_out.date_format' => '退勤時間の形式が不正です。',
-            'breaks.*.start.required' => '休憩開始時間は必須です。',
-            'breaks.*.end.required' => '休憩終了時間は必須です。',
-            'breaks.*.start.date_format' => '休憩開始時間の形式が不正です。',
-            'breaks.*.end.date_format' => '休憩終了時間の形式が不正です。',
+            'clock_in.required' => '出勤時間は必須です',
+            'clock_in.date_format' => '出勤時間の形式が不正です',
+            'clock_out.required' => '退勤時間は必須です',
+            'clock_out.date_format' => '退勤時間の形式が不正です',
+            'breaks.*.start.required' => '休憩開始時間は必須です',
+            'breaks.*.end.required' => '休憩終了時間は必須です',
+            'breaks.*.start.date_format' => '休憩開始時間の形式が不正です',
+            'breaks.*.end.date_format' => '休憩終了時間の形式が不正です',
         ];
     }
 

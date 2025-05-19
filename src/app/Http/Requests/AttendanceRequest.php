@@ -38,14 +38,14 @@ class AttendanceRequest extends FormRequest
     {
         return [
             'clock_in.required' => '出勤時間は必須です。',
-            'clock_in.date_format' => '出勤時間の形式が不正です。',
+            'clock_in.date_format' => '出勤時間の形式が不正です',
             'clock_out.required' => '退勤時間は必須です。',
-            'clock_out.date_format' => '退勤時間の形式が不正です。',
+            'clock_out.date_format' => '退勤時間の形式が不正です',
             'reason.required' => '備考を記入してください',
             'breaks.*.start.required_with' => '休憩時間の開始・終了の両方を入力してください',
             'breaks.*.end.required_with' => '休憩時間の開始・終了の両方を入力してください',
-            'breaks.*.start.date_format' => '休憩開始時間の形式が不正です。',
-            'breaks.*.end.date_format' => '休憩終了時間の形式が不正です。',
+            'breaks.*.start.date_format' => '休憩開始時間の形式が不正です',
+            'breaks.*.end.date_format' => '休憩終了時間の形式が不正です',
         ];
     }
 
