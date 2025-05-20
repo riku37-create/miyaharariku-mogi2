@@ -1,5 +1,5 @@
 ## アプリケーション名
-  coachtechフリマ
+  coachtech 勤怠管理アプリ
 ## 環境・使用技術
 ・Laravel Framework: 8.83.8
 ・nginx: 1.21.1
