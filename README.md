@@ -47,6 +47,12 @@
   - MAIL_USERNAME=null
   - MAIL_PASSWORD=null
   - MAIL_ENCRYPTION=null
+
+ .envファイルの「MAIL_FROM_ADDRESS」が `null` のままだと「Cannot send message without a sender address」というエラーが発生します。
+以下のように適当な送信元メールアドレスを設定してください：
+MAIL_FROM_ADDRESS=no-reply@example.com
+MAIL_FROM_NAME=“Example App”
+
 13. .envファイルを書き終えたら、PHPコンテナで以下のコマンドを実行してください。
   $ php artisan config:clear
 
@@ -94,3 +100,21 @@
 
 ## ER図
 ![ER図](./mogi2.drawio.png)
+
+## ログイン画面
+```
+一般ユーザ向けログイン画面：http://localhost/login
+管理者向けログイン画面：http://localhost/admin/login
+```
+
+## ダミーユーザのログイン情報
+```
+一般ユーザ
+ユーザー名:test0
+メールアドレス:test0@example.com
+パスワード:password0
+管理者
+ユーザー名:管理者
+メールアドレス:admin@example.com
+パスワード:password
+```
