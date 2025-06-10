@@ -24,13 +24,13 @@
         <span class="attendance-date">{{ $today->locale('ja')->isoFormat('YYYY年M月D日(ddd)') }}</span>
     </div>
     <div class="time-wrap">
-        <span class="attendance-time">{{ $nowTime }}</span>
+        <span id="server-clock" class="attendance-time">--:--</span>
     </div>
     <div class="attendance-buttons">
         @if (!$attendance) {{-- まだ出勤してない --}}
             <form action="{{ route('attendance.clockIn') }}" method="POST" class="attendance-form">
                 @csrf
-                <button type="submit" class="btn-clock-in">出勤</button>
+                <button type="submit" class="btn-clock-in" onclick="this.disabled=true; this.form.submit();">出勤</button>
             </form>
         @elseif ($attendance && !$attendance->clock_out) {{-- 出勤済みだが退勤していない --}}
             @if (!$isOnBreak) {{-- 休憩中ではないときだけ退勤ボタンを表示 --}}
@@ -47,12 +47,31 @@
             @else {{-- 休憩中ではない --}}
                 <form action="{{ route('attendance.breakStart') }}" method="POST" class="attendance-form">
                     @csrf
-                    <button type="submit" class="btn-break-start">休憩入り</button>
+                    <button type="submit" class="btn-break-start" onclick="this.disabled=true; this.form.submit();">休憩入り</button>
                 </form>
             @endif
         @else {{-- 退勤済み --}}
             <span class="attendance-message">お疲れ様でした！</span>
         @endif
     </div>
+    @if (session('error'))
+    <div class="session-error">
+        {{ session('error') }}
+    </div>
+    @endif
 </div>
+
+<script>
+    function updateClockFromServer() {
+        fetch('/api/server-time')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('server-clock').textContent = data.now;
+            });
+    }
+
+    updateClockFromServer();
+    setInterval(updateClockFormServer, 60000);
+</script>
 @endsection
+

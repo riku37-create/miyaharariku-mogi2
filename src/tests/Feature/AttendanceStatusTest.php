@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\User;
+use App\Models\Attendance;
 
 class AttendanceStatusTest extends TestCase
 {
@@ -68,20 +69,28 @@ class AttendanceStatusTest extends TestCase
 
     public function test_退勤済の場合_ステータスが退勤済と表示される()
     {
-        /** @var \App\Models\User */
+        /** @var \App\Models\User $user */
         $user = User::factory()->create();
+
+        // 出勤済みの状態を作成
+        Attendance::create([
+            'user_id' => $user->id,
+            'date' => now()->toDateString(),
+            'clock_in' => now()->subHours(8),
+        ]);
+
+        // 勤務中ユーザーとしてログイン
         $this->actingAs($user);
 
-        // 出勤
-        $this->post(route('attendance.clockIn'));
+        // 退勤ボタンが表示されていることを確認
+        $response = $this->get(route('attendance.show'));
+        $response->assertSee('退勤');
 
-        // 退勤
+        // 退勤処理を実行
         $this->post(route('attendance.clockOut'));
 
-        // 勤怠打刻画面を確認
+        // 再度画面表示（退勤済ステータス確認）
         $response = $this->get(route('attendance.show'));
-
-        $response->assertStatus(200);
         $response->assertSee('退勤済み');
     }
 }

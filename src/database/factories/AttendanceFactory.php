@@ -7,6 +7,7 @@ use Carbon\Carbon;
 
 class AttendanceFactory extends Factory
 {
+    protected $model = \App\Models\Attendance::class;
     /**
      * Define the model's default state.
      *
@@ -14,8 +15,8 @@ class AttendanceFactory extends Factory
      */
     public function definition(): array
     {
-        $date = Carbon::today()->subDays(rand(0, 30));
-        $clockIn = $date->copy()->addHours(rand(8, 10));
+        $date = now()->startOfMonth()->addDays(rand(0, now()->daysInMonth - 1));
+        $clockIn = $date->copy()->setTime(rand(8, 9), rand(0, 59));
         $clockOut = $clockIn->copy()->addHours(rand(7, 9));
         $totalClock = $clockIn->diffInSeconds($clockOut);
 

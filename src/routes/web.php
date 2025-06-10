@@ -47,6 +47,9 @@ Route::post('/email/verification-notification', function (Request $request) {
     return back()->with('message', '確認メールを再送しました。');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
+Route::get('/api/server-time', function() {
+    return response()->json(['now' => now()->format('H:i')]);
+});
 //ユーザー
 Route::middleware(['auth'])->group(function () {
     Route::group(['middleware' => 'verified'], function() {

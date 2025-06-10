@@ -22,6 +22,8 @@ class CreateAttendancesTable extends Migration
             $table->integer('total_break')->nullable();
             $table->integer('total_clock')->nullable();
             $table->timestamps();
+
+            $table->unique(['user_id', 'date']);
         });
     }
 

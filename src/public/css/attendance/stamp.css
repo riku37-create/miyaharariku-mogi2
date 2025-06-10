@@ -71,3 +71,9 @@
     font-size: 30px;
     font-weight: 700;
 }
+
+.session-error {
+    margin-top: 30px;
+    color: red;
+    text-align: center;
+}

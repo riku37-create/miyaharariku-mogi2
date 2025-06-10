@@ -24,27 +24,37 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 一般ユーザー作成
-        User::factory(5)->create([
-            'role' => 'user',
-        ])->each(function ($user) {
-            // 各ユーザーに対して勤怠レコードを5日分作成
-            Attendance::factory(5)
-            ->create([
-                'user_id' => $user->id,
-            ]);
-        });
+        $users = User::factory(5)->create(['role' => 'user',]);
+        $usedDates = [];
+
+        foreach ($users as $user) {
+            $usedDates = [];
+
+            for ($i = 0; $i < 10; $i++) {
+                do {
+                    $date = now()->startOfMonth()->addDays(rand(0, now()->daysInMonth - 1))->toDateString();
+                } while (in_array($date, $usedDates));
+                $usedDates[] = $date;
+
+                Attendance::factory()
+                    ->for($user)
+                    ->state(['date' => $date])
+                    ->create();
+            }
+        }
 
         // ログインする用
-        User::factory()->create([
+        $loginUser = User::factory()->create([
             'name' => 'test0',
             'email' => 'test0@example.com',
             'password' => bcrypt('password0'),
             'role' => 'user',
-        ])->each(function ($user) {
-            Attendance::factory(5)
-            ->create([
-                'user_id' => $user->id,
-            ]);
-        });
+        ]);
+
+        for ($i = 0; $i < 5; $i++) {
+            Attendance::factory()
+                ->for($loginUser)
+                ->create();
+        }
     }
 }
